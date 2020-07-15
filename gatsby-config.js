@@ -13,7 +13,7 @@ module.exports = {
         isSearchEnabled: true,
         repository: {
           baseUrl:
-            'https://github.com/ibm-garage-ref-storefront/docs.git',
+            'https://github.com/ibm-garage-ref-storefront/docs',
           subDirectory: '/'
         }
       }
