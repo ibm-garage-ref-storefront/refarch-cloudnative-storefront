@@ -36,12 +36,6 @@
 - title: Resiliency
   pages:
     - path: /resiliency
-- title: App flow
+- title: Contributing to this Site
   pages:
-    - path: /app
-- title: References
-  pages:
-    - path: /references
-- title: Contribution Guidelines
-  pages:
-    - path: /contribution
+    - path: /contribute
