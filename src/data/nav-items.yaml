@@ -13,8 +13,10 @@
       path: /deployments/openshift
     - title: Toolkit OpenShift Pipelines
       path: /related-repositories/pipelines
-    - title: Local using docker
-      path: /deployments/appsody
+    - title: Local using docker - Spring Version
+      path: /deployments/appsody-spring
+    - title: Local using docker - MicroProfile Version
+      path: /deployments/appsody-mp
 - title: Related Repositories
   pages:
     - title: Inventory

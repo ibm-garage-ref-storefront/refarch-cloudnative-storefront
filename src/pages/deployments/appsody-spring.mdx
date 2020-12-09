@@ -1,5 +1,5 @@
 ---
-title: Deploy Storefront locally on your machine
+title: Deploy Storefront (Spring Version) locally on your machine 
 description: Instructions to deploy storefront locally
 ---
 
@@ -22,7 +22,7 @@ For more details on installation, check [this](https://appsody.dev/docs/installi
   - [Docker for Windows](https://docs.docker.com/docker-for-windows/)
 
 * [IBM Mobile Foundation CLI](https://www.npmjs.com/package/mfpdev-cli)
-* [Ionic CLI Version 5.4.16](https://ionicframework.com/docs/cli) 
+* [Ionic CLI Version 5.4.16](https://ionicframework.com/docs/cli)
 
 ## Running the application locally
 
@@ -452,16 +452,16 @@ Now, let us check the app out. You can access it at http://localhost:3000.
 
 - Edit `mfpconfig/app_config.json` file and update the json object for the key `adapters` with the endpoint url of storefront auth service, clientId and secret
 - Edit `mfpconfig/app_config.json` file and update the json object for the key `backendservices` with the appropriate endpoint urls of the storefront backend services
-- To enable Mobile Foundation Push Notifications service for this application you must configure the service for Push Notification Credentials (FCM, APNS).  Edit `mfpconfig/app_config.json` file and update it for these credentials under json object `services.push.settings`.  To know more about what these settings and credentials are about lookup https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/notifications/sending-notifications/#setting-up-notifications    
-- To enable push notification on Android remember to replace `google-services.json` into the directory `ionic` 
+- To enable Mobile Foundation Push Notifications service for this application you must configure the service for Push Notification Credentials (FCM, APNS).  Edit `mfpconfig/app_config.json` file and update it for these credentials under json object `services.push.settings`.  To know more about what these settings and credentials are about lookup https://mobilefirstplatform.ibmcloud.com/tutorials/en/foundation/8.0/notifications/sending-notifications/#setting-up-notifications
+- To enable push notification on Android remember to replace `google-services.json` into the directory `ionic`
 
   All other required configurations are already preset into `mfpconfig/app_config.json` file.  Save `mfpconfig/app_config.json`
-- Start Community Edition of IBM Mobile Foundation Services locally.  NOTE : This edition is free for trial and development purposes with the constraint that data will not be persisted beyond the lifetime of the services. 
+- Start Community Edition of IBM Mobile Foundation Services locally.  NOTE : This edition is free for trial and development purposes with the constraint that data will not be persisted beyond the lifetime of the services.
     ```
     mfpdev mfservices start
-    ``` 
+    ```
     and you must see the following output
-        
+
     ```
     Verifying server configuration...
     Registering to server:'http://<mobile foundation endpoint url>:<port>' runtime:'mfp'
@@ -484,7 +484,3 @@ Now, let us check the app out. You can access it at http://localhost:3000.
 - Run the application to view the catalog, make an order and review the user profile.  NOTE: When you place an order you will receive a push notification on your mobile app regardign the shipment of your order.
 
 ![Storefront](../../images/mobileapp.png)
-
-
-
-
