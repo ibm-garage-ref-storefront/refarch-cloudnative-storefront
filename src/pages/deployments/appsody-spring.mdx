@@ -1,5 +1,5 @@
 ---
-title: Deploy Storefront (Spring Version) locally on your machine 
+title: Deploy Storefront (Spring Version) locally on your machine
 description: Instructions to deploy storefront locally
 ---
 
@@ -130,7 +130,7 @@ docker run --name inventory-ms-spring \
     -d dev.local/inventory-ms-spring
 ```
 
-For instance, if it is docker-for-mac `<docker_host>` will be `docker.for.mac.localhost`.
+For instance, `<docker_host>` will be `host.docker.internal`.
 
 - You can also verify it as follows.
 
@@ -192,7 +192,7 @@ docker run --name catalog-ms-spring \
     -d dev.local/catalog-ms-spring
 ```
 
-For instance, if it is docker-for-mac `<docker_host>` will be `docker.for.mac.localhost`.
+For instance, `<docker_host>` will be `host.docker.internal`.
 
 - You can also verify it as follows.
 
@@ -235,6 +235,14 @@ aad8b8e1bce6        dev.local/inventory-ms-spring                         "/star
 7a958fa9cae3        mysql:5.7.14                                          "docker-entrypoint.s…"   16 hours ago        Up 16 hours         0.0.0.0:3306->3306/tcp                           inventorymysql
 ```
 
+- Populate the database with user information.
+
+```
+cd populate
+python3 populate.py localhost 5985
+cd ..
+```
+
 #### Deploy Customer app
 
 <br></br>
@@ -258,7 +266,7 @@ docker run --name customer-ms-spring \
     -d dev.local/customer-ms-spring
 ```
 
-For instance, if it is docker-for-mac `<docker_host>` will be `docker.for.mac.localhost`.
+For instance, `<docker_host>` will be `host.docker.internal`.
 
 - You can also verify it as follows.
 
@@ -294,13 +302,13 @@ appsody build
 
 # Start the Auth Container
 docker run --name auth-ms-spring \
-    -e CUSTOMER_URL=http://<docker_host>:8083/micro/customer/search \
+    -e CUSTOMER_URL=http://<docker_host>:8083 \
     -e HS256_KEY=E6526VJkKYhyTFRFMC0pTECpHcZ7TGcq8pKsVVgz9KtESVpheEO284qKzfzg8HpWNBPeHOxNGlyudUHi6i8tFQJXC8PiI48RUpMh23vPDLGD35pCM0417gf58z5xlmRNii56fwRCmIhhV7hDsm3KO2jRv4EBVz7HrYbzFeqI45CaStkMYNipzSm2duuer7zRdMjEKIdqsby0JfpQpykHmC5L6hxkX0BT7XWqztTr6xHCwqst26O0g8r7bXSYjp4a \
     -p 8084:8080 \
     -d dev.local/auth-ms-spring
 ```
 
-For instance, if it is docker-for-mac `<docker_host>` will be `docker.for.mac.localhost`.
+For instance, `<docker_host>` will be `host.docker.internal`.
 
 - You can also verify it as follows.
 
@@ -375,7 +383,7 @@ docker run --name orders-ms-spring \
     -d dev.local/orders-ms-spring
 ```
 
-For instance, if it is docker-for-mac `<docker_host>` will be `docker.for.mac.localhost`.
+For instance, `<docker_host>` will be `host.docker.internal`.
 
 - You can also verify it as follows.
 
@@ -399,6 +407,7 @@ aad8b8e1bce6        dev.local/inventory-ms-spring                         "/star
 ```bash
 git clone https://github.com/ibm-garage-ref-storefront/storefront-ui.git
 cd storefront-ui
+git checkout hp-spring-version
 ```
 
 #### Deploy Storefront UI
@@ -417,8 +426,6 @@ docker run --name web \
   -p 3000:3000 \
   -d dev.local/web
 ```
-
-For instance, if it is docker-for-mac `<docker_host>` will be `docker.for.mac.localhost`.
 
 - You can also verify it as follows.
 
