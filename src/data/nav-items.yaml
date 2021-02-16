@@ -37,6 +37,8 @@
       path: /related-repositories/gitops
     - title: Pipelines
       path: /related-repositories/pipelines
+    - title: Keycloak
+      path: /related-repositories/keycloak
 - title: Resiliency
   pages:
     - path: /resiliency

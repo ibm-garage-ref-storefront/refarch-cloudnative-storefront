@@ -1,0 +1,208 @@
+---
+title: Keycloak - JWT token generation
+description: This project demonstrates the usage of Keycloak (alternative to Auth microservice)
+---
+
+## Introduction
+
+This demonstrates how to generate JWT token using Keycloak. This can be used to authenticate the API user as well as to enable OAuth 2.0 authorization for all OAuth protected APIs using OpenID Connect in the Storefront application. This can be used as an alternative to the Auth microservice.
+
+Using keycloak, we can add authentication to the services and secure the APIs. It is an open source Identity and Access Management solution.
+
+## Table of Contents
+  * [Run Keycloak](#run-keycloak)
+  * [Access Keycloak console](#access-keycloak-console)
+  * [Realm creation](#realm-creation)
+  * [User creation](#user-creation)
+  * [Client creation](#client-creation)
+  * [JWT token generation](#jwt-token-generation)
+
+## Run Keycloak
+
+You can spin up Keycloak instance in different ways.
+
+### Start Keycloak on OpenJDK
+
+- You need to have OpenJDK 1.8 or newer installed on your machine.
+- Download [Keycloak](https://downloads.jboss.org/keycloak/12.0.2/keycloak-12.0.2.zip).
+- Extract the zip file and you should see a directory named `keycloak-12.0.2`.
+- Run the below commands.
+
+```
+cd keycloak-12.0.2
+```
+
+For linux, run `bin/standalone.sh` and for windows, run `bin/standalone.bat`.
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-zip).
+
+### Start Keycloak on Docker
+
+Run the below command.
+
+```
+docker run -d -p 8085:8080 -e KEYCLOAK_USER=storefront -e KEYCLOAK_PASSWORD=passw0rd! quay.io/keycloak/keycloak:12.0.2
+```
+
+This will start the keycloak instance on port `8085`. The credentials will be `storefront` and `passw0rd!`.
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-docker).
+
+### Start keycloak on Podman
+
+Run the below command.
+
+```
+podman run -p 8085:8080 -e KEYCLOAK_USER=storefront -e KEYCLOAK_PASSWORD=passw0rd! quay.io/keycloak/keycloak:12.0.2
+```
+
+This will start the keycloak instance on port `8085`. The credentials will be `storefront` and `passw0rd!`.
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-podman).
+
+### Start keycloak on kubernetes
+
+Run the below command.
+
+```
+kubectl create -f https://raw.githubusercontent.com/keycloak/keycloak-quickstarts/latest/kubernetes-examples/keycloak.yaml
+```
+
+This will start the keycloak instance on kubernetes. The credentials will be `admin` and `admin`.
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-kube).
+
+### Start keycloak on openshift
+
+Run the below command.
+
+```
+oc login -u developer -p developer
+oc new-project keycloak
+oc process -f https://raw.githubusercontent.com/keycloak/keycloak-quickstarts/latest/openshift-examples/keycloak.yaml \
+    -p KEYCLOAK_USER=admin \
+    -p KEYCLOAK_PASSWORD=admin \
+    -p NAMESPACE=keycloak \
+| oc create -f -
+```
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-openshift).
+
+### Start keycloak on kubernetes using operator
+
+- Navigate to `Home` -> `Operators` -> `OperatorHub` in the menu on left side.
+- Search for `Keycloak`.
+- Go to Keycloak operator and install it.
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-operator-kubernetes).
+
+### Start keycloak on Openshift using operator
+
+- Navigate to `Home` -> `Operators` -> `OperatorHub` in the menu on left side.
+- Search for `Keycloak`.
+- Go to Keycloak operator and install it.
+
+For detailed instructions, click [here](https://www.keycloak.org/getting-started/getting-started-operator-openshift).
+
+## Access Keycloak console
+
+- Open the Keycloak login console. Access it using `http://<host>:<port>/auth/admin`.
+
+For example, if you are using Docker it will be http://localhost:8080/auth/admin.
+
+![Keycloak console](../../images/keycloak_console.png)
+
+## Realm creation
+
+- Open the Keycloak admin console. Access it using `http://<host>:<port>/auth/admin`.
+
+For example, if you are using Docker it will be http://localhost:8080/auth/admin.
+
+- Go to Master and click on the drop down. Choose `Add realm` here.
+
+![Keycloak add realm](../../images/keycloak_add_realm.png)
+
+- Now enter the details. Here, we are naming our realm as `sfrealm`.
+
+![Keycloak realm creation](../../images/keycloak_create_realm.png)
+
+- Once, it is created successfully, you will see something like below.
+
+![Storefront Realm](../../images/storefront_realm.png)
+
+## User creation
+
+- To create a user, click on `Users`. Then choose `Add User`.
+
+![Keycloak user creation](../../images/keycloak_user_creation.png)
+
+- Enter the details of the user and click `Save`.
+
+![Keycloak add user](../../images/keycloak_add_user.png)
+
+- Once the user is created, set the password. To do this, navigate to `Credentials` tab. Enter your desired password in the `Password` and `Password confirmation` fields. Also set `Temporary` to `OFF`.
+
+![Keycloak set user credentials](../../images/set_user_credentials.png)
+
+## Client creation
+
+- To create a client, click on `Clients`.
+
+![Keycloak client creation](../../images/client_creation.png)
+
+- You will see a list of available clients here. To create a new one, choose `Create`.
+
+![Keycloak new client creation](../../images/new_client_create.png)
+
+- Enter the necessary client details.
+
+![Keycloak client details](../../images/client_details.png)
+
+- Once the client is created, navigate to `Settings tab`. Click on the `Client Protocol` drop down and choose `Confidential`.
+
+![Keycloak client details](../../images/client_access_type.png)
+
+- Scroll down. Expand `Advanced Settings`. Specify the `Access Token Lifespan` here.
+
+![Keycloak client advanced settings](../../images/client_advanced_settings.png)
+
+- Scroll a further bit down and expand `Authentication Flow Overrrides`. Set `Browser Flow` to `browser` and `Direct Grant Flow` to `direct grant`.
+
+![Keycloak client auth override](../../images/client_auth_override.png)
+
+- Click `Save` to save all the above settings.
+
+- Now click on the `Credentials` tab. In the `Client Authenticator` field, choose `C;ient Id and Secret`
+
+![Keycloak client secret](../../images/client_secret.png)
+
+- Grab the `Secret`.
+
+## JWT token generation
+
+To generate a token, run the below command.
+
+```
+curl -L -X POST 'http://<replace_me_with_keycloak_host>:<replace_me_with_keycloak_port>/auth/realms/<replace_me_with_your_realm_name>/protocol/openid-connect/token' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'client_id=<replace_me_with_client_id>' \
+  --data-urlencode 'grant_type=password' \
+  --data-urlencode 'client_secret=<replace_me_with_previously_grabbed_secret>' \
+  --data-urlencode 'scope=openid' \
+  --data-urlencode 'username=<replace_me_with_user_name>' \
+  --data-urlencode 'password=<replace_me_with_password>'
+```
+
+If it is successful, you will see something like below.
+
+```
+$ curl -L -X POST 'http://localhost:8085/auth/realms/sfrealm/protocol/openid-connect/token' \
+> -H 'Content-Type: application/x-www-form-urlencoded' \
+> --data-urlencode 'client_id=bluecomputeweb' \
+> --data-urlencode 'grant_type=password' \
+> --data-urlencode 'client_secret=d8de8519-8fd8-4946-8df5-2a24395f9c1e' \
+> --data-urlencode 'scope=openid' \
+> --data-urlencode 'username=foo' \
+> --data-urlencode 'password=bar'
+{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjclpGODhTTjJvRmdyckNlNzA1ZF9rNW5oSTlLMG10WHFWYnZJTDZuTkpJIn0.eyJleHAiOjE2MTMzOTUwMjMsImlhdCI6MTYxMzM5NDQyMywianRpIjoiNGI4OTEzZjAtYTNjNS00NDg2LTg1ZGYtMjdmYmJlZDdlZDEzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDg1L2F1dGgvcmVhbG1zL3NmcmVhbG0iLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiMzk4ODNhZTEtMTkzMS00MDczLThkMzEtZGQwZTlmNWVlZGQ3IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiYmx1ZWNvbXB1dGV3ZWIiLCJzZXNzaW9uX3N0YXRlIjoiMjA2ZmE1NTYtZjEyZi00OGM5LWJmOTAtOTIxNTEyOTNjODE5IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwOi8vbG9jYWxob3N0OjgwODUiXSwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJuYW1lIjoiRm9vIEJhciIsInByZWZlcnJlZF91c2VybmFtZSI6ImZvbyIsImdpdmVuX25hbWUiOiJGb28iLCJmYW1pbHlfbmFtZSI6IkJhciIsImVtYWlsIjoiZm9vQGdtYWlsLmNvbSJ9.kB8_fRvzO-WgVpZH4iMyXgnrixL_OI3y_7aOkXxSFcbZq3qPiWoZSpI-EmFt0SCM8EWR6M7elG7epmNFzvqnFrTP2WCH7ocvVQIu1u8NGxlYu1RuU8Ow6BrbsmBlFxbpPfpdGkIJ-pe0oJFpD1fDh0xxi42rd_YbHLt2s6JPK5FHT9HUnRDvkfbOcRg33SjS5AR-u73E6PGS4Ulu6I-WHF4uyAFTe8QdEYwe0GvRPvpygXyCZu9Wi3MSLi2KrtNWOHYWV4HJ1q-Dso9yNWE59KzWNYb3WWKVoeuVDLR8cq2C3j5EtsLsSuykFOtZdJB3wIc5JJFvjPkmDdBcDNCJbQ","expires_in":600,"refresh_expires_in":1800,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI0YjJhM2U5Ny01NzFjLTQ4MjQtOTFhMy02YjhhMjg2OTVhZDgifQ.eyJleHAiOjE2MTMzOTYyMjMsImlhdCI6MTYxMzM5NDQyMywianRpIjoiN2RiYzM0ZjMtM2I1ZS00N2M3LTk3ODItODc2YzFlYzI4OTkzIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDg1L2F1dGgvcmVhbG1zL3NmcmVhbG0iLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwODUvYXV0aC9yZWFsbXMvc2ZyZWFsbSIsInN1YiI6IjM5ODgzYWUxLTE5MzEtNDA3My04ZDMxLWRkMGU5ZjVlZWRkNyIsInR5cCI6IlJlZnJlc2giLCJhenAiOiJibHVlY29tcHV0ZXdlYiIsInNlc3Npb25fc3RhdGUiOiIyMDZmYTU1Ni1mMTJmLTQ4YzktYmY5MC05MjE1MTI5M2M4MTkiLCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIn0.opl5h4lQAajECsukVbwhiAuVULRvpxP-rqU66PJKvro","token_type":"Bearer","id_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJjclpGODhTTjJvRmdyckNlNzA1ZF9rNW5oSTlLMG10WHFWYnZJTDZuTkpJIn0.eyJleHAiOjE2MTMzOTUwMjMsImlhdCI6MTYxMzM5NDQyMywiYXV0aF90aW1lIjowLCJqdGkiOiJlZTEwZGU2MC05NWNiLTQxZDEtYTk0YS01Mzk2MWVhOGJiYTYiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODUvYXV0aC9yZWFsbXMvc2ZyZWFsbSIsImF1ZCI6ImJsdWVjb21wdXRld2ViIiwic3ViIjoiMzk4ODNhZTEtMTkzMS00MDczLThkMzEtZGQwZTlmNWVlZGQ3IiwidHlwIjoiSUQiLCJhenAiOiJibHVlY29tcHV0ZXdlYiIsInNlc3Npb25fc3RhdGUiOiIyMDZmYTU1Ni1mMTJmLTQ4YzktYmY5MC05MjE1MTI5M2M4MTkiLCJhdF9oYXNoIjoicVBXVnpRNFJOY0g4S2ZGMHVCenhLdyIsImFjciI6IjEiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsIm5hbWUiOiJGb28gQmFyIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiZm9vIiwiZ2l2ZW5fbmFtZSI6IkZvbyIsImZhbWlseV9uYW1lIjoiQmFyIiwiZW1haWwiOiJmb29AZ21haWwuY29tIn0.LcaTq0HMbek8Jf9wIVNjtGGJOcWF2iQyIjLfPhdzIG1GP7X7oly0qMpMijWSWYLdNujmymuE5lLbs9Aqq7MT6GqfU_1PnzI6diuQ9etYwaXp5KKX_fAM_sJnWrrs5nJ9MdRINQfA8pEyI3NMgZpQ6n63euO2iPGpZEE0zhBu2CJ2mViqpUHvqQ8LeYNRTWi3JX46CN5s_J-Y7GbxqBiurf6Sko8RAtIAu2bSW6AodL-XPCW3ijB4N7cdZxWKTUnDjhM2cstqo7CMhfS2IrZk75oD96tEbynB14DCDnN6i9_5oZGkex6BLotB1r3HMig9ffV2VwUdMUKO6XSGXDSNJQ","not-before-policy":0,"session_state":"206fa556-f12f-48c9-bf90-92151293c819","scope":"openid email profile"}
+```
