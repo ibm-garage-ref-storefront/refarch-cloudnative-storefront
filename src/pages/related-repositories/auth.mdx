@@ -46,7 +46,6 @@ This project demonstrates how to authenticate the API user as well as to enable 
 - Leverage [Spring Boot](https://projects.spring.io/spring-boot/) framework to build a Microservices application.
 - Uses [Spring Security OAuth](https://spring.io/projects/spring-security-oauth).
 - Return a signed [JWT](https://jwt.io/) Bearer token back to caller for identity propagation and authorization
-- Uses [Docker](https://docs.docker.com/) to package application binary and its dependencies.
 
 <br/><br/>
 
@@ -68,7 +67,7 @@ This project demonstrates how to authenticate the API user as well as to enable 
   </Column>
   <Column colMd={3} colLg={4} noGutterSm>
     <ImageCard
-      title="Deploy the app to Openshift 4.3"
+      title="Deploy the app to Openshift"
       titleColor="light"
       aspectRatio="1:1"
       href="/"
@@ -102,13 +101,73 @@ This project demonstrates how to authenticate the API user as well as to enable 
 
 <Tab label="OpenLiberty">
 
-TBD
+[Auth Github Repo](https://github.com/ibm-garage-ref-storefront/auth-ms-openliberty)
+
+### Project Features
+
+<br/><br/>
+
+- [MicroProfile](https://microprofile.io/) based Authorization Server application that handles user authentication and authorization.
+- Uses OpenID Connect and acts as a provider to validate login credentials.
+- Return a [mpJwt](https://www.ibm.com/support/knowledgecenter/en/SSAW57_liberty/com.ibm.websphere.liberty.autogen.nd.doc/ae/rwlp_config_mpJwt.html) Bearer token back to caller for identity propagation and authorization.
+
+<br/><br/>
+
+<Row>
+  <Column colMd={3} colLg={4} noGutterSm>
+    <ImageCard
+      title="Deploy the app locally"
+      titleColor="light"
+      aspectRatio="1:1"
+      href="https://github.com/ibm-garage-ref-storefront/auth-ms-openliberty/blob/master/README.md"
+      actionIcon="arrowRight"
+      subTitleColor="light"
+      subTitle="Appsody"
+      >
+
+![Light dark](./images/local_run.jpg)
+
+  </ImageCard>
+  </Column>
+  <Column colMd={3} colLg={4} noGutterSm>
+    <ImageCard
+      title="Deploy the app to Openshift"
+      titleColor="light"
+      aspectRatio="1:1"
+      href="/"
+      actionIcon="arrowRight"
+      subTitleColor="light"
+      subTitle="Appsody"
+      >
+
+![Light dark](./images/redhat_openshift.jpg)
+
+  </ImageCard>
+  </Column>
+  <Column colMd={3} colLg={4} noGutterSm>
+    <ImageCard
+      title="Deploy the app using CP4Apps"
+      titleColor="light"
+      aspectRatio="1:1"
+      href="/"
+      actionIcon="arrowRight"
+      subTitleColor="light"
+      subTitle="CP4Apps"
+      >
+
+![Light dark](./images/cloud-pak-for-applications.jpg)
+
+  </ImageCard>
+  </Column>
+</Row>
 
 </Tab>
 
 <Tab label="Quarkus">
 
-TBD
+For quarkus based implementation of storefront, we are using [Keycloak](https://www.keycloak.org/) as an alternative to this service.
+
+For more details, refer this [link](/related-repositories/keycloak).
 
 </Tab>
 

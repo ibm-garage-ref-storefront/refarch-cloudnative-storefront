@@ -35,9 +35,7 @@ Though it is a part of a bigger application, Orders service is itself an applica
 
 - Leverages [Spring Boot](https://projects.spring.io/spring-boot/) framework to build a Microservices application.
 - Uses [MariaDB](https://mariadb.org/) as the orders database.
-- Uses [Spring Data JPA](http://projects.spring.io/spring-data-jpa/) to persist data to MariaDB database.
 - [OAuth 2.0](https://oauth.net/2/) protected APIs using Spring Security framework.
-- Uses [Docker](https://docs.docker.com/) to package application binary and its dependencies.
 - When retrieving orders using the OAuth 2.0 protected APIs, return only orders belonging to the user identity encoded in the user_name claim in the JWT payload. For more details on how identity is propagated, refer [Auth](https://github.com/ibm-garage-ref-storefront/auth-ms-spring) Microservice.
 
 <br/><br/>
@@ -60,7 +58,7 @@ Though it is a part of a bigger application, Orders service is itself an applica
   </Column>
   <Column colMd={3} colLg={4} noGutterSm>
     <ImageCard
-      title="Deploy the app to Openshift 4.3"
+      title="Deploy the app to Openshift"
       titleColor="light"
       aspectRatio="1:1"
       href="/"
@@ -78,7 +76,7 @@ Though it is a part of a bigger application, Orders service is itself an applica
       title="Deploy the app using CP4Apps"
       titleColor="light"
       aspectRatio="1:1"
-      href="https://github.com/ibm-garage-ref-storefront/orders-ms-spring/blob/master/docs/CP4APPS.md"
+      href="/"
       actionIcon="arrowRight"
       subTitleColor="light"
       subTitle="CP4Apps"
@@ -94,7 +92,65 @@ Though it is a part of a bigger application, Orders service is itself an applica
 
 <Tab label="OpenLiberty">
 
-TBD
+[Orders Github Repo](https://github.com/ibm-garage-ref-storefront/orders-ms-openliberty)
+
+### Project Features
+
+<br/><br/>
+
+- Based on [MicroProfile](https://microprofile.io/).
+- Uses [MariaDB](https://mariadb.org/) as the orders database.
+- When retrieving orders using the OAuth 2.0 protected APIs, return only orders belonging to the user identity encoded in the user_name claim in the JWT payload. For more details on how identity is propagated, refer [Auth](https://github.com/ibm-garage-ref-storefront/auth-ms-openliberty) Microservice.
+
+<br/><br/>
+
+<Row>
+  <Column colMd={3} colLg={4} noGutterSm>
+    <ImageCard
+      title="Deploy the app locally"
+      titleColor="light"
+      aspectRatio="1:1"
+      href="https://github.com/ibm-garage-ref-storefront/orders-ms-openliberty/blob/master/README.md"
+      actionIcon="arrowRight"
+      subTitleColor="light"
+      subTitle="Appsody"
+      >
+
+![Light dark](./images/local_run.jpg)
+
+  </ImageCard>
+  </Column>
+  <Column colMd={3} colLg={4} noGutterSm>
+    <ImageCard
+      title="Deploy the app to Openshift"
+      titleColor="light"
+      aspectRatio="1:1"
+      href="/"
+      actionIcon="arrowRight"
+      subTitleColor="light"
+      subTitle="Appsody"
+      >
+
+![Light dark](./images/redhat_openshift.jpg)
+
+  </ImageCard>
+  </Column>
+  <Column colMd={3} colLg={4} noGutterSm>
+    <ImageCard
+      title="Deploy the app using CP4Apps"
+      titleColor="light"
+      aspectRatio="1:1"
+      href="/"
+      actionIcon="arrowRight"
+      subTitleColor="light"
+      subTitle="CP4Apps"
+      >
+
+![Light dark](./images/cloud-pak-for-applications.jpg)
+
+  </ImageCard>
+  </Column>
+</Row>
 
 </Tab>
 
