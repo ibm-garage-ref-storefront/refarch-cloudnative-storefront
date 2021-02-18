@@ -15,6 +15,7 @@ Using keycloak, we can add authentication to the services and secure the APIs. I
   * [Realm creation](#realm-creation)
   * [User creation](#user-creation)
   * [Client creation](#client-creation)
+  * [Role creation](#role-creation)
   * [JWT token generation](#jwt-token-generation)
 
 ## Run Keycloak
@@ -177,6 +178,44 @@ For example, if you are using Docker it will be <http://localhost:8085/auth/admi
 ![Keycloak client secret](../../images/client_secret.png)
 
 - Grab the `Secret`.
+
+## Role creation
+
+- To create a realm role, navigate to `Roles`. Click on `Add Role` to create a new role.
+
+![Add realm role](../../images/add_realm_role.png)
+
+- For storefront application, we have two roles namely `admin` and `user`. Create those two as follows.
+
+![admin realm role](../../images/admin_realm_role.png)
+
+![user realm role](../../images/user_realm_role.png)
+
+- Once created, we need to assign these roles to users.
+
+- Navigate to `Users` and click on `View all users` to see the existing users.
+
+![view existing users](../../images/view_users.png)
+
+- Click on the user `foo`. Now, navigate to `Role Mappings`.
+
+![role mappings](../../images/role_mapping.png)
+
+- Select the appropriate role. For the user `foo`, it will be `user`. Once selected, click on `Add selected`.
+
+![foo role mapping](../../images/foo_role_mapping.png)
+
+- Assigned roles for the user `foo` can be viewed.
+
+![view foo roles](../../images/view_foo_roles.png)
+
+- Now similarly add the appropriate roles to the other user `user`. It will be both `user` and `admin`.
+
+![user role mapping](../../images/user_role_mapping.png)
+
+- Assigned roles for the user `user` can be viewed.
+
+![view user roles](../../images/view_user_roles.png)
 
 ## JWT token generation
 
