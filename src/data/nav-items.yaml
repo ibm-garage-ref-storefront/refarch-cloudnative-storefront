@@ -17,6 +17,8 @@
       path: /deployments/appsody-spring
     - title: Local using docker - MicroProfile Version
       path: /deployments/appsody-mp
+    - title: Local using docker - Quarkus Version
+      path: /deployments/quarkus
 - title: Related Repositories
   pages:
     - title: Inventory
