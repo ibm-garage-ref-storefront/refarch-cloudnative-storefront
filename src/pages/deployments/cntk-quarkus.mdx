@@ -1,0 +1,222 @@
+---
+title: Deploy Storefront Microservices onto Openshift 4.6 using Cloudnative toolkit
+description: Instructions to deploy on Openshift using Cloudnative toolkit
+---
+
+## Introduction
+Today you will be learning how to deploy all storefront microservices on Openshift using Tekton
+
+![Storefront Architecture](../../images/storefront.png)
+
+## Table of Contents
+  * [Pre-requisites](#pre-requisites)
+  * [Set Up Databases for Storefront](#set-up-databases-for-storefront)
+  * [Create an organization on Github](#create-an-organization-on-github)
+  * [Deploy Microservices to Openshift](#deploy-microservices-to-openshift)
+  * [Trigger the Webhook](#trigger-the-webhook)
+  * [Build & Run Storefront Mobile App](#build-and-run-storefront-mobile-app)
+
+## Pre-requisites
+
++ [`SetUp Cloudnative toolkit`](https://cloudnativetoolkit.dev/workshop/setup#3.-setup-ibm-cloud-native-toolkit-workshop)
++ [`Setup CLI and Terminal Shell`](https://cloudnativetoolkit.dev/workshop/setup#4-setup-cli-and-terminal-shell)
++ [`Git cli`](https://git-scm.com/downloads)
++ [`OC cli`](https://docs.openshift.com/container-platform/4.3/welcome/index.html)
++ [`Tekton cli`](https://github.com/tektoncd/cli)
++ [`gh cli`](https://cli.github.com/)
+
+## Set Up Databases for Storefront
+
+This project will demonstrate how to deploy all the databases that are required by the storefront application. This will show you how to deploy MySQL, Elasticsearch, CouchDB, and MariaDB databases.
+
+### Clone the repo
+
+```bash
+git clone https://github.com/ibm-garage-ref-storefront/storefront-databases.git
+cd storefront-databases
+chmod +x ./setup_databases.sh
+```
+
+Run the below command to deploy the databases on the openshift cluster where `storefront-dev` is the project name.
+
+```bash
+oc login --token={your-api-token} --server={your-servername}
+./setup_databases.sh sf-quarkus-dev
+```
+
+The output should be something similar to what is shown below.
+```bash
+$ ./setup_databases.sh sf-quarkus-dev
+NAMESPACE not set. Using parameter "sf-quarkus-dev"
+=========================================================================
+Set namespace
+error: A project named "sf-quarkus-dev" does not exist on "https://c100-e.jp-tok.containers.cloud.ibm.com:30791".
+Your projects are:
+* calico-system
+* default
+* ibm-cert-store
+* ibm-system
+....
+....
+....
+* openshift-service-ca
+* openshift-service-ca-operator
+* openshift-user-workload-monitoring
+* openshift-vsphere-infra
+* tigera-operator
+To see projects on another server, pass '--server=<server>'.
+Now using project "sf-quarkus-dev" on server "https://c100-e.jp-tok.containers.cloud.ibm.com:30791".
+
+You can add applications to this project with the 'new-app' command. For example, try:
+
+    oc new-app django-psql-example
+
+to build a new example application in Python. Or use kubectl to deploy a simple Kubernetes application:
+
+    kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
+
+=========================================================================
+Adding security constraints
+securitycontextconstraints.security.openshift.io/anyuid added to: ["system:serviceaccount:sf-quarkus-dev:default"]
+securitycontextconstraints.security.openshift.io/privileged added to: ["system:serviceaccount:sf-quarkus-dev:default"]
+=========================================================================
+Generating necessary secrets
+secret/customer-couchdb-couchdb created
+secret/orders-mariadb-secret created
+secret/inventory-mysql created
+=========================================================================
+Generating necessary configmaps
+configmap/customer-couchdb-couchdb created
+configmap/inventory-ms-data created
+configmap/mariadb-configmap created
+configmap/orders-mariadb-tests created
+configmap/inventory-mysql-test created
+=========================================================================
+Deploying the databases
+statefulset.apps/customer-couchdb-couchdb created
+deployment.apps/elasticsearch created
+statefulset.apps/orders-mariadb created
+deployment.apps/inventory-mysql created
+Waiting for deployment "inventory-mysql" rollout to finish: 0 of 1 updated replicas are available...
+deployment "inventory-mysql" successfully rolled out
+deployment "elasticsearch" successfully rolled out
+partitioned roll out complete: 1 new pods have been updated...
+Waiting for 1 pods to be ready...
+statefulset rolling update complete 1 pods at revision orders-mariadb-77b894447...
+=========================================================================
+Creating database services
+service/customer-couchdb-couchdb created
+service/customer-couchdb-svc-couchdb created
+service/elasticsearch created
+service/orders-mariadb created
+service/inventory-mysql created
+=========================================================================
+Populating data in database
+job.batch/inventory-populate-mysql created
+job.batch/customer-create-user created
+job.batch/inventory-populate-mysql condition met
+job.batch/customer-create-user condition met
+=========================================================================
+```
+
+Now access your new project
+```
+oc project sf-quarkus-dev
+```
+You should get an output similar to what is shown below
+
+```bash
+> oc project sf-quarkus-dev
+Already on project "sf-quarkus-dev" on server "https://c100-e.jp-tok.containers.cloud.ibm.com:30791".
+```
+Upon completing this section you can see above all of your databases have been deployed onto your openshift cluster. To check the status, run the below command.
+
+```bash
+> oc get pods
+NAME                               READY   STATUS      RESTARTS   AGE
+customer-couchdb-couchdb-0         2/2     Running     0          3m28s
+customer-create-user-ktzzn         0/1     Completed   0          2m36s
+elasticsearch-85b87b5fbd-6l4pk     1/1     Running     0          3m28s
+inventory-mysql-57887c6745-p7cpk   1/1     Running     0          3m27s
+inventory-populate-mysql-mwqqf     0/1     Completed   0          2m37s
+orders-mariadb-0                   1/1     Running     0          3m28s
+```
+
+## Create an organization on Github
+
+When you create a new organization from scratch, it doesn't have any repositories associated with it.
+
+Github has information on how to create an organization. View the link below for the steps:
+
+https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/creating-a-new-organization-from-scratch
+
+## Clone the storefront-repo-automator to run the script
+
+You can manually create a new repo and added it onto your Github organization or you can use the script that we provided for you. Clone the repository [storefront-repo-automator](https://github.com/ibm-garage-ref-storefront/storefront-repo-automator) as shown below:
+
+Once you have cloned the repository, make sure you run the following command:
+
+  ``` bash
+  git clone https://github.com/ibm-garage-ref-storefront/storefront-repo-automator
+  cd storefront-repo-automator
+  export org={your-github-org-you-created}
+  ./run.sh
+  ```
+
+After running the storefront-repo-automator, you should be able to see the storefront repositories as shown below.
+
+![Storefront](../../images/storefront-test-org.png)
+
+## Deploy Microservices to Openshift
+
+Today you will learning how to deploy all microservices to Openshift using Tekton. To achieve this, you must run the following steps:
+
+- Login into the cluster using `oc login`.
+
+- Sync the project to get all the necessary configurations.
+
+```
+oc sync sf-quarkus-dev
+```
+
+### Inventory Microservice
+
+- Clone the `inventory-ms-quarkus` repo.
+
+```bash
+git clone https://github.com/ibm-garage-ref-storefront/inventory-ms-quarkus.git
+cd inventory-ms-quarkus
+```
+
+- To trigger the pipeline, run the below command.
+
+```
+oc pipeline --tekton
+```
+
+  - Enter git credentials.
+  - Use down/up arrow and select `ibm-java-maven`.
+  - Hit Enter to enable image scanning.
+  - Open the url to see the pipeline running in the OpenShift Console.
+
+- Verify that Pipeline Run completed successfully.
+
+- Grab the route.
+
+```
+oc get route inventory-ms-quarkus --template='{{.spec.host}}'
+```
+
+You will see something like below.
+
+```
+$ oc get route inventory-ms-quarkus --template='{{.spec.host}}'
+inventory-ms-quarkus-sf-quarkus-openshift.storefront-cn-6ccd7f378ae819553d37d5f2ee142bd6-0000.che01.containers.appdomain.cloud
+```
+
+- Now access the endpoint using `https://<route_url>/micro/inventory`.
+
+For instance if using the above route, it will be https://inventory-ms-quarkus-sf-quarkus.storefront-cn-6ccd7f378ae819553d37d5f2ee142bd6-0000.che01.containers.appdomain.cloud/micro/inventory.
+
+## Result
+![Storefront](../../images/storefront-result.png)

@@ -9,16 +9,18 @@
     - path: /application-overview
 - title: Deployments
   pages:
-    - title: Openshift with CP4Apps
-      path: /deployments/openshift
-    - title: Toolkit OpenShift Pipelines
-      path: /related-repositories/pipelines
+    - title: Cloudnative toolkit - Quarkus version
+      path: /deployments/cntk-quarkus
     - title: Local using docker - Spring Version
       path: /deployments/appsody-spring
     - title: Local using docker - MicroProfile Version
       path: /deployments/appsody-mp
     - title: Local using docker - Quarkus Version
       path: /deployments/quarkus
+    - title: Openshift 4.3 with CP4Apps
+      path: /deployments/openshift
+    - title: Toolkit OpenShift 4.3 Pipelines
+      path: /related-repositories/pipelines
 - title: Related Repositories
   pages:
     - title: Inventory
