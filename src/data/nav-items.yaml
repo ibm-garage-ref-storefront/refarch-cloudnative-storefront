@@ -7,6 +7,9 @@
 - title: Application Overview
   pages:
     - path: /application-overview
+- title: App Flow
+  pages:
+    - path: /app
 - title: Deployments
   pages:
     - title: Cloudnative toolkit - Quarkus version
