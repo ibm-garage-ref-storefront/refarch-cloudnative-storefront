@@ -4,7 +4,7 @@ description: Instructions to deploy on Openshift using Cloudnative toolkit
 ---
 
 ## Introduction
-Today you will be learning how to deploy all storefront microservices on Openshift using Tekton
+Today you will be learning how to deploy all storefront microservices on Openshift using Cloudnative toolkit with the help of Tekton.
 
 ![Storefront Architecture](../../images/storefront.png)
 
@@ -12,9 +12,7 @@ Today you will be learning how to deploy all storefront microservices on Openshi
   * [Pre-requisites](#pre-requisites)
   * [Set Up Databases for Storefront](#set-up-databases-for-storefront)
   * [Create an organization on Github](#create-an-organization-on-github)
-  * [Deploy Microservices to Openshift](#deploy-microservices-to-openshift)
-  * [Trigger the Webhook](#trigger-the-webhook)
-  * [Build & Run Storefront Mobile App](#build-and-run-storefront-mobile-app)
+  * [Deploy Microservices to Openshift using toolkit](#deploy-microservices-to-openshift-using-toolkit)
 
 ## Pre-requisites
 
@@ -27,7 +25,7 @@ Today you will be learning how to deploy all storefront microservices on Openshi
 
 ## Set Up Databases for Storefront
 
-This project will demonstrate how to deploy all the databases that are required by the storefront application. This will show you how to deploy MySQL, Elasticsearch, CouchDB, and MariaDB databases.
+This section will demonstrate how to deploy all the databases that are required by the storefront application. This will show you how to deploy MySQL, Elasticsearch, CouchDB, and MariaDB databases.
 
 ### Clone the repo
 
@@ -167,7 +165,7 @@ After running the storefront-repo-automator, you should be able to see the store
 
 ![Storefront](../../images/storefront-test-org.png)
 
-## Deploy Microservices to Openshift
+## Deploy Microservices to Openshift using toolkit
 
 Today you will learning how to deploy all microservices to Openshift using Tekton. To achieve this, you must run the following steps:
 
@@ -218,5 +216,177 @@ inventory-ms-quarkus-sf-quarkus-openshift.storefront-cn-6ccd7f378ae819553d37d5f2
 
 For instance if using the above route, it will be https://inventory-ms-quarkus-sf-quarkus.storefront-cn-6ccd7f378ae819553d37d5f2ee142bd6-0000.che01.containers.appdomain.cloud/micro/inventory.
 
-## Result
-![Storefront](../../images/storefront-result.png)
+### Catalog Microservice
+
+- Clone the `catalog-ms-quarkus` repo.
+
+```bash
+git clone https://github.com/ibm-garage-ref-storefront/catalog-ms-quarkus.git
+cd catalog-ms-quarkus
+```
+
+- To trigger the pipeline, run the below command.
+
+```
+oc pipeline --tekton
+```
+
+  - Enter git credentials.
+  - Use down/up arrow and select `ibm-java-maven`.
+  - Hit Enter to enable image scanning.
+  - Open the url to see the pipeline running in the OpenShift Console.
+
+- Verify that Pipeline Run completed successfully.
+
+- Grab the route.
+
+```
+oc get route catalog-ms-quarkus --template='{{.spec.host}}'
+```
+
+You will see something like below.
+
+```
+$oc get route catalog-ms-quarkus --template='{{.spec.host}}'
+catalog-ms-quarkus-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud
+```
+
+- Now access the endpoint using `https://<route_url>/micro/items`.
+
+For instance if using the above route, it will be https://catalog-ms-quarkus-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud/micro/items.
+
+### Set Up Keycloak operator
+
+Follow the instructions [here](https://www.keycloak.org/getting-started/getting-started-operator-openshift) to install keycloak operator.
+
+To set up storefront specific settings follow the instructions [here](https://cloudnativereference.dev/related-repositories/keycloak/).
+
+### Orders Microservice
+
+- Clone the `orders-ms-quarkus` repo.
+
+```bash
+git clone https://github.com/ibm-garage-ref-storefront/orders-ms-quarkus.git
+cd orders-ms-quarkus
+```
+
+Note: Before triggering this pipeline, make sure you set up `ibm-java-env` secret with necessary info like `KEYCLOAK_CLIENT_ID` and `KEYCLOAK_CLIENT_SECRET`.
+
+- To trigger the pipeline, run the below command.
+
+```
+oc pipeline --tekton
+```
+
+  - Enter git credentials.
+  - Use down/up arrow and select `ibm-java-maven`.
+  - Hit Enter to enable image scanning.
+  - Open the url to see the pipeline running in the OpenShift Console.
+
+- Verify that Pipeline Run completed successfully.
+
+- Grab the route.
+
+```
+oc get route orders-ms-quarkus --template='{{.spec.host}}'
+```
+
+You will see something like below.
+
+```
+$ oc get route orders-ms-quarkus --template='{{.spec.host}}'
+orders-ms-quarkus-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud
+```
+
+- Now access the endpoint using `https://<route_url>/micro/items`.
+
+For instance if using the above route, it will be https://orders-ms-quarkus-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud/health.
+
+### Customer Microservice
+
+- Clone the `customer-ms-quarkus` repo.
+
+```bash
+git clone https://github.com/ibm-garage-ref-storefront/customer-ms-quarkus.git
+cd customer-ms-quarkus
+```
+
+Note: Before triggering this pipeline, make sure you set up `ibm-java-env` secret with necessary info like `KEYCLOAK_CLIENT_ID` and `KEYCLOAK_CLIENT_SECRET`.
+
+- To trigger the pipeline, run the below command.
+
+```
+oc pipeline --tekton
+```
+
+  - Enter git credentials.
+  - Use down/up arrow and select `ibm-java-maven`.
+  - Hit Enter to enable image scanning.
+  - Open the url to see the pipeline running in the OpenShift Console.
+
+- Verify that Pipeline Run completed successfully.
+
+- Grab the route.
+
+```
+oc get route customer-ms-quarkus --template='{{.spec.host}}'
+```
+
+You will see something like below.
+
+```
+$ oc get route customer-ms-quarkus --template='{{.spec.host}}'
+customer-ms-quarkus-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud
+```
+
+- Now access the endpoint using `https://<route_url>/micro/items`.
+
+For instance if using the above route, it will be https://customer-ms-quarkus-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud/health.
+
+### Storefront UI
+
+- Clone the `storefront-ui` repo.
+
+```bash
+git clone https://github.com/ibm-garage-ref-storefront/storefront-ui.git
+cd storefront-ui
+git checkout hp-quarkus-version
+```
+
+Note: Before triggering this pipeline, make sure you set up `ibm-java-env` secret with necessary info like `KEYCLOAK_CLIENT_ID` and `KEYCLOAK_CLIENT_SECRET`.
+
+- To trigger the pipeline, run the below command.
+
+```
+oc pipeline --tekton
+```
+
+  - Enter git credentials.
+  - Use down/up arrow and select `ibm-nodejs`.
+  - Hit Enter to enable image scanning.
+  - Open the url to see the pipeline running in the OpenShift Console.
+
+- Verify that Pipeline Run completed successfully.
+
+- Grab the route.
+
+```
+oc get route storefront-ui --template='{{.spec.host}}'
+```
+
+You will see something like below.
+
+```
+$ oc get route storefront-ui --template='{{.spec.host}}'
+storefront-ui-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud
+```
+
+- Now access the endpoint using `https://<route_url>/micro/items`.
+
+For instance if using the above route, it will be https://storefront-ui-sf-quarkus-dev.mq-devops-6ccd7f378ae819553d37d5f2ee142bd6-0000.par01.containers.appdomain.cloud/.
+
+![Storefront](../../images/storefront_result.png)
+
+- Once deployed successfully, you will be able to see the list of pipelines in the openshift web console as follows.
+
+![Storefront pipelines](../../images/sf_pipelines.png)
